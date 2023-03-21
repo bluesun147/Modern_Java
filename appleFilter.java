@@ -17,7 +17,7 @@ public class appleFilter {
         inventory.add(apple3);
 
 
-        System.out.println(filterApplesByColor(inventory, Color.GREEN).toString());
+        System.out.println(filterApplesByColor(inventory, Color.GREEN));
     }
 
 
@@ -64,7 +64,46 @@ public class appleFilter {
 
     // 세번째 시도
     // 색과 무게 필터 합치고 어떤 기준으로 필터링 할 지 flag 주는 방식? -> bad!
+
+    // 네번째 시도 : 추상적 조건으로 필터링
+    public static List<Apple> filterApples(List<Apple> inventory, ApplePredicate p) {
+        List<Apple> result = new ArrayList<>();
+        for (Apple apple : inventory) {
+            if (p.test(apple)) { // predicate 객체로 사과 검사 조건 캡슐화
+                result.add(apple);
+            }
+        }
+        return result;
+    }
 }
+
+// 네번째 시도에서 사용
+// 참/거짓 반환하는 함수 predicate 이라고 함.
+// 선택 조건을 결정하는 인터페이스
+// 사과 선택 전략을 캡슐화
+interface ApplePredicate {
+    boolean test(Apple apple);
+}
+
+// 여러 선택 조건의 predicate 정의 가능.
+// 조건에 따라 predicate 적절하게 만들면 됨.
+
+// 무거운 사과만 선택
+class AppleHeavyWeightPredicate implements ApplePredicate {
+    @Override
+    public boolean test(Apple apple) {
+        return apple.weight > 150;
+    }
+}
+
+// 녹색 사과만 선택
+class AppleGreenColorPredicate implements ApplePredicate {
+    @Override
+    public boolean test(Apple apple) {
+        return Color.GREEN.equals(apple.getColor());
+    }
+}
+
 
 class Apple {
     public Color color;
