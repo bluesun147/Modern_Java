@@ -75,6 +75,19 @@ public class appleFilter {
         }
         return result;
     }
+
+    // 다섯번째 시도 : 익명 클래스
+    // 익명 클래스는 클래스 선언과 인스턴스화 동시에 할 수 있다
+    // 즉 즉석에서 필요한 구현 바로 만들어서 사용 가능!
+    // 하지만 코드의 장황함 (verbosity)
+    // 인터페이스 구현하는 여러 클래스 선언 과정 줄일 수 있지만 한눈에 이해 어렵다
+    List<Apple> inventory = null;
+    List <Apple> redApples = filterApples(inventory, new ApplePredicate() {
+        @Override
+        public boolean test(Apple apple) {
+            return Color.RED.equals(apple.getColor());
+        }
+    });
 }
 
 // 네번째 시도에서 사용
