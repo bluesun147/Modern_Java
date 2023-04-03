@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
 
 public class appleFilter {
     public static void main(String[] args) {
@@ -82,12 +83,38 @@ public class appleFilter {
     // 하지만 코드의 장황함 (verbosity)
     // 인터페이스 구현하는 여러 클래스 선언 과정 줄일 수 있지만 한눈에 이해 어렵다
     List<Apple> inventory = null;
-    List <Apple> redApples = filterApples(inventory, new ApplePredicate() {
+    List<Apple> redApples = filterApples(inventory, new ApplePredicate() {
         @Override
         public boolean test(Apple apple) {
             return Color.RED.equals(apple.getColor());
         }
     });
+
+    // 여섯 번째 시도 : 람다 표현식 사용
+    List<Apple> result =
+            filterApples(inventory, (Apple apple) -> Color.RED.equals(apple.getColor()));
+
+    // 일곱 번째 시도 : 리스트 형식으로 추상화
+    // 메소드 한정 제네릭! https://st-lab.tistory.com/153
+    // public <T> T genericMethod(T o) { ..
+    // 접근 제어자 <제네릭타입> [반환타입] [메소드명] ([제네릭타입] [파라미터]) { ..
+    public static <T> List<T> filter(List<T> list, Predicate7<T> p) {
+        List<T> result = new ArrayList<>();
+        for (T e : list) {
+            if (p.test(e)) {
+                result.add(e);
+            }
+        }
+        return result;
+    }
+
+    List<Apple> redApples7 =
+            filter(inventory, (Apple apple) -> Color.RED.equals(apple.getColor()));
+
+
+    private List<Integer> numbers;
+    List<Integer> evenNumbers =
+            filter(numbers, (Integer i) -> i % 2 == 0);
 }
 
 // 네번째 시도에서 사용
@@ -117,6 +144,13 @@ class AppleGreenColorPredicate implements ApplePredicate {
     }
 }
 
+// 일곱 번째 시도 : 리스트 형식으로 추상화
+interface Predicate7<T> {
+    boolean test(T t);
+};
+
+
+
 
 class Apple {
     public Color color;
@@ -125,6 +159,7 @@ class Apple {
     public Color getColor() {
         return color;
     }
+
     public int getWeight() {
         return weight;
     }
